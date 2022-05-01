@@ -1,0 +1,15 @@
+﻿@page "/registration"
+<h3>Registration</h3>
+<div>
+	<table class="table table-responsive-md">
+		<thead class="table-dark">Registration</thead>
+		<tbody>
+			<tr>
+                    <td><input class="form-control" placeholder="TestPlaceHolder" @bind-value="partialPracticeString" /></td>
+                </tr>
+		</tbody>
+	</table>
+</div>
+@code {
+	private string partialPracticeString = "partialPracticeString";
+}
