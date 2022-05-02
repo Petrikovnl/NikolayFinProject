@@ -1,0 +1,70 @@
+﻿@using BlazorApp4.Data
+
+<div class="modal-body">
+    @if(RegistrationIsActive)
+    {
+        <table class="table table-responsive-md">
+            <thead class="table-dark">
+                <tr>
+                    <th><h2>Registration</h2></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input class="form-control" placeholder="Login" @bind-value="Login" /></td>
+                </tr>
+                <tr>
+                    <td><input class="form-control" placeholder="Password" @bind-value="Password" /></td>
+                </tr>
+                <tr>
+                    <td><input class="form-control" placeholder="Password Again" @bind-value="PasswordAgain"/></td>
+                </tr>
+                <tr>
+                    <td><input class="form-control" placeholder="Name" @bind-value="Name" /></td>
+                </tr>
+                <tr>
+                    <td><input class="form-control" placeholder="Surname" @bind-value="Surname" /></td>
+                </tr>
+                <tr>
+                    <td><input class="form-control" placeholder="Email" @bind-value="Email"/></td>
+                </tr>
+                <tr>
+                    <td><input class="form-control" placeholder="Phone" @bind-value="Phone"/></td>
+                </tr>
+                
+            </tbody>
+        </table>
+     <br />
+
+    <button class="btn btn-primary" @onclick="UserRegistration">SIGN UP</button>
+    <button class="btn btn-primary" @onclick="FieldsClear">CLEAR</button>
+}
+</div>
+
+
+   
+@code {
+    private string Login;
+    private string Password;
+    private string PasswordAgain;
+    private string Name;
+    private string Surname;
+    private string Email;
+    private string Phone;
+    [Parameter]
+    public bool RegistrationIsActive { get; set; }
+    private void FieldsClear()
+    {
+        Login = string.Empty;
+        Password = string.Empty;
+        PasswordAgain = string.Empty;
+        Name = string.Empty;
+        Surname = string.Empty;
+        Email = string.Empty;
+        Phone = string.Empty;
+    }
+    private void UserRegistration()
+    {
+        User.AddUserToDB(Login,Password,Name,Surname,Email,Phone);
+    }
+}
