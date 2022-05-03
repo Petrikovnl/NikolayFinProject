@@ -62,14 +62,24 @@ namespace BlazorApp4.Data
             return FoundUser;
         }
 
-        public static List<User> GetListFromDb()
+        public static void DeleteUser(string searchedLogin)
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("NikolayFinProject");
             var collection = database.GetCollection<User>("Users");
-            var listUsersFromDB = collection.Find(x => true).ToList();
-            return listUsersFromDB;
+            collection.DeleteOne(x=>x.Login==searchedLogin);
         }
+
+        public static List<User> GetAllUsersFromDb()
+        {
+            var client = new MongoClient("mongodb://localhost");
+            var database = client.GetDatabase("NikolayFinProject");
+            var collection = database.GetCollection<User>("Users");
+            var allUsersFromDB = collection.Find(x => true).ToList();
+            return allUsersFromDB;
+        }
+        
+        
         public static List<String> GetLoginFromDb()
         {
 

@@ -1,4 +1,5 @@
-﻿@page "/accountprofile"
+﻿@page "/accountadministration"
+
 @using BlazorApp4.Data
 
 <h3>AccountProfile</h3>
@@ -8,32 +9,17 @@
     <div class="container-fluid">
         @*<h2 class="text-center">@_searchDay. </h2>*@
         <table class="table table-responsive-md">
-            
+            <thead class="table-dark">
                 <tr>
                     <th>Login</th>
-                    <td>@User.GetAccountProfile("petrikovnl").Login</td>
-                </tr>
-                <tr>
                     <th>Password</th>
-                    <td>@User.GetAccountProfile("petrikovnl").Password</td>
-                </tr>
-                <tr>
                     <th>Name</th>
-                    <td>@User.GetAccountProfile("petrikovnl").Name</td>
-                </tr>
-                <tr>
                     <th>Surname</th>
-                    <td>@User.GetAccountProfile("petrikovnl").Surname</td>
-                </tr>
-                <tr>
                     <th>Email</th>
-                    <td>@User.GetAccountProfile("petrikovnl").Email</td>
-                </tr>
-                <tr>
                     <th>Phone</th>
-                    <td>@User.GetAccountProfile("petrikovnl").Phone</td>
+                    <th>Action</th>
                 </tr>
-            
+            </thead>
             @*<GenericTemplate Items="_tasks">
                 <ItemTemplate Context="item">*@
                     @*<td>@User.GetAccountProfile("petrikovnl").Login</td>
@@ -43,19 +29,20 @@
                     <td>@User.GetAccountProfile("petrikovnl").Email</td>
                     <td>@User.GetAccountProfile("petrikovnl").Phone</td>
                     <td><button class="btn btn-danger" @onclick="@(()=>User.DeleteUser("petrikovnl"))">Delete Account</button></td>*@
-                @*@foreach (var item in AllUsers)
+                @foreach (var item in AllUsers)
                     {
                         <tbody>
                             <tr>
-                                
+                                <td>@item.Login</td>
                                 <td>@item.Password</td>
                                 <td>@item.Name</td>
                                 <td>@item.Surname</td>
                                 <td>@item.Email</td>
                                 <td>@item.Phone</td>
+                                <td><button class="btn btn-danger" @onclick="(() => DeleteUser(item))">Delete user @item.Login</button></td>
                             </tr>
                         </tbody>
-                    }*@
+                    }
                     @*</ItemTemplate>
             </GenericTemplate>*@
 
@@ -88,9 +75,14 @@
 
 @*<ActionsWithTasks actions="true" addNewTaskEvent="AddNewTaskToList" _tasks="_tasks" />*@
 
-
 @code {
     [Parameter]
     public List<User> AllUsers { get; set; } = User.GetAllUsersFromDb();
+    
     private List<User> _allUsers = new List<User>();
+    
+    private void DeleteUser (User item)
+    {
+        AllUsers.Remove(item);
+    }
   }

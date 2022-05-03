@@ -1,0 +1,71 @@
+﻿@page "/login"
+@using BlazorApp4.Data
+
+<h3>Login</h3>
+<div class="row">
+
+    <div class="modal-body">
+        @*<h2 class="text-center">@_searchDay. </h2>*@
+        <table class="table table-responsive-md">
+            <thead class="table-dark">
+                <td>Welcome!</td>
+
+            </thead>
+            @*<GenericTemplate Items="_tasks">
+                <ItemTemplate Context="item">*@
+                    <td><input class="form-control" placeholder="login" @bind-value="_login" /></td>
+                    <td><input class="form-control" placeholder="password" @bind-value="_password" /></td>
+                    <td><button class="btn btn-primary" @onclick="(()=>Authorization(_login))">Log in</button></td>
+                @*</ItemTemplate>
+            </GenericTemplate>*@
+            @*@if (_tasks == null)
+            {
+                @ListNull
+            }
+            else
+            {
+                if (_tasks.Count == 0)
+                {
+                    @ListEmpty
+                }
+                else
+                    @foreach (var item in _tasks)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>@item.Name</td>
+                                <td><input type="checkbox" @bind="item.InProgress" /></td>
+                                <td><input type="checkbox" @bind="item.IsDone" /></td>
+                                <td><button class="btn btn-danger " >Delete Task</button></td>
+                            </tr>
+                        </tbody>
+                    }
+                }*@
+        </table>
+    </div>
+</div>
+
+@code {
+    private string _login;
+    private string _password;
+    private string message;
+
+    [Parameter]
+    public bool RegistrationIsActive { get; set; }
+
+    private bool Authorization(string login)
+    {
+        bool isExist=false;
+        if (User.GetAccountProfile(login) == null)
+        {
+            message = "User not exist";
+            showWindow.Show();
+        }
+        return isExist;
+    }
+    ShowWindow showWindow;
+    void Cancel()
+    {
+        showWindow.Hide();
+    }
+}
