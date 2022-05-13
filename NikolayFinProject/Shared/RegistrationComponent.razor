@@ -14,10 +14,10 @@
                     <td><input class="form-control" placeholder="Login" @bind-value="Login" /></td>
                 </tr>
                 <tr>
-                    <td><input class="form-control" placeholder="Password" @bind-value="Password" /></td>
+                    <td><input class="form-control" placeholder="Password" type="password" @bind-value="Password" /></td>
                 </tr>
                 <tr>
-                    <td><input class="form-control" placeholder="Password Again" @bind-value="PasswordAgain"/></td>
+                    <td><input class="form-control" placeholder="Password Again" type="password" @bind-value="PasswordAgain"/></td>
                 </tr>
                 <tr>
                     <td><input class="form-control" placeholder="Name" @bind-value="Name" /></td>
@@ -66,5 +66,6 @@
     private void UserRegistration()
     {
         User.AddUserToDB(Login,Password,Name,Surname,Email,Phone);
+        FieldsClear();
     }
 }

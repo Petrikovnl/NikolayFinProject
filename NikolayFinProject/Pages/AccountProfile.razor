@@ -2,7 +2,7 @@
 @using BlazorApp4.Data
 
 <div>
-    <input class="form-control" placeholder="login" @bind-value="_login" />
+    <input class="form-control" placeholder="enter your login to search the database" @bind-value="_login" />
 </div>
 <h3>AccountProfile</h3>
 
@@ -15,7 +15,7 @@
                 <tr>
                     <th>Login</th>
                     
-                    @if (_login==null)
+                    @if (@User.GetAccountProfile(_login)==null)
                     {
                         <td>No data</td>
                     }
@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <th>Password</th>
-                    @if (_login==null)
+                    @if (@User.GetAccountProfile(_login)==null)
                     {
                         <td>No data</td>
                     }
@@ -38,7 +38,7 @@
                 </tr>
                 <tr>
                     <th>Name</th>
-                    @if (_login==null)
+                    @if (@User.GetAccountProfile(_login)==null)
                     {
                         <td>No data</td>
                     }
@@ -49,7 +49,7 @@
                 </tr>
                 <tr>
                     <th>Surname</th>
-                    @if (_login==null)
+                    @if (@User.GetAccountProfile(_login)==null)
                     {
                         <td>No data</td>
                     }
@@ -60,7 +60,7 @@
                 </tr>
                 <tr>
                     <th>Email</th>
-                    @if (_login==null)
+                    @if (@User.GetAccountProfile(_login)==null)
                     {
                         <td>No data</td>
                     }
@@ -71,7 +71,7 @@
                 </tr>
                 <tr>
                     <th>Phone</th>
-                    @if (_login==null)
+                    @if (@User.GetAccountProfile(_login)==null)
                     {
                         <td>No data</td>
                     }
