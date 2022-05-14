@@ -1,0 +1,122 @@
+﻿@page "/appointments"
+@using NikolayFinProject.Data
+
+<h3>MyAppointments</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Notes</th>
+                        <th>Date</th>
+                        <th>Doctors Name</th>
+                        <th>Doctors Specialization</th>
+                        <th>Address</th>
+                        <th>Cabinet Number</th>
+                        <th>Is Done</th>
+                    </tr>
+                </thead>
+                @foreach (var item in _appointmentList)
+                {
+                    <tbody>
+                        <tr>
+                            <td>@item.NameOfAppointment</td>
+                            <td>@item.AppointmentsNotes</td>
+                            <td>@item.DateOfAppointment</td>
+                            <td>@item.DoctorsName</td>
+                            <td>@item.DoctorsSpecialization</td>
+                            <td>@item.MedCenterAddress</td>
+                            <td>@item.CabinetNumber</td>
+                            <td><input type="checkbox" @bind-value="item.IsDone" /></td>
+                            @*<td><button class="btn btn-danger" @onclick="(() => DeleteTask(item))">Delete appointment</button></td>*@
+                        </tr>
+                    </tbody>
+                }
+            </table>
+
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" placeholder="Input new appointment here" @bind-value="_nameOfAppointment" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" placeholder="_appointmentsNotes" @bind-value="_appointmentsNotes" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="datetime" @bind-value="_dateOfAppointment"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" placeholder="_doctorsName" @bind-value="_doctorsName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" placeholder="_doctorsSpecialization" @bind-value="_doctorsSpecialization" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" placeholder="_medCenterAddress" @bind-value="_medCenterAddress" />
+                </div>
+            </div>
+             <div class="row">
+                <div class="col">
+                    <input class="form-control" placeholder="_cabinetNumber" @bind-value="_cabinetNumber" />
+                </div>
+            </div>
+                
+            <div class="col col-auto">
+                    <button class="btn btn-outline-dark" @onclick="AddNewTaskToList">Add New Apointment</button>
+                </div>
+                <div class="col col-auto">
+                    <button class="btn btn-primary" @onclick="AddToDB">Save Task List</button>
+                </div>
+            
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Appointment> _appointmentList = new();
+
+    //private string _newAppointment;
+    private DateTime _timeNow = DateTime.UtcNow;
+    private string _nameOfAppointment;
+    private string _appointmentsNotes;
+    private DateTime _dateOfAppointment;
+    private string _doctorsName;
+    private string _doctorsSpecialization;
+    private string _medCenterAddress;
+    private int _cabinetNumber;
+    private bool _isDone;
+
+    private void AddNewTaskToList()
+    {
+        //if (!string.IsNullOrEmpty(_newAppointment))
+        //{
+            _appointmentList.Add(new Appointment(_nameOfAppointment,_appointmentsNotes,_dateOfAppointment,
+            _doctorsName,_doctorsSpecialization,_medCenterAddress,_cabinetNumber));
+            
+            //f_newAppointment = ""; // string.Empty;
+        //}
+    }
+
+    //private void DeleteTask(TaskItem item)
+    //{
+    //    _appointmentList.Remove(item);
+    //}
+
+    private void AddToDB()
+    {
+        AppointmentList.AddItem(new Appointment(_nameOfAppointment,_appointmentsNotes,_dateOfAppointment,
+            _doctorsName,_doctorsSpecialization,_medCenterAddress,_cabinetNumber), "January");
+    }
+}

@@ -15,7 +15,7 @@ namespace BlazorApp4.Data
         //    PhoneNumber = phoneNumber;
         //}
 
-        public User(string login, string password, string name, string surname,  string email,string phone)
+        public User(string login, string password, string name, string surname,  string email,string phone, byte[] img)
         {
             Login = login;
             Password = password;
@@ -23,15 +23,22 @@ namespace BlazorApp4.Data
             Surname = surname;
             Email=email;
             Phone = phone;
+            Img = img;
         }
-        public ObjectId _id { get; set; }
+
+		public User()
+		{
+		}
+
+		public ObjectId _id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        
+        public byte[] Img { get; set; }
+
 
         //public static List<User> GetList()
         //{
@@ -45,12 +52,13 @@ namespace BlazorApp4.Data
         //    return listToReturn;
         //}
 
-        public static void AddUserToDB(string login, string password, string name, string surname, string email, string phone) //Добавление юзера в БД
+        public static void AddUserToDB(string login, string password, string name, string surname, string email,
+            string phone, byte[] img) //Добавление юзера в БД
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("NikolayFinProject");
             var collection = database.GetCollection<User>("Users");
-            collection.InsertOne(new User(login,password, name, surname, email, phone));
+            collection.InsertOne(new User(login,password, name, surname, email, phone, img));
         }
 
         public static User GetAccountProfile(string searchedLogin)

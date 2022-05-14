@@ -35,6 +35,7 @@
             </tbody>
         </table>
      <br />
+     <FileUpload></FileUpload>
 
     <button class="btn btn-primary" @onclick="UserRegistration">SIGN UP</button>
     <button class="btn btn-primary" @onclick="FieldsClear">CLEAR</button>
@@ -51,6 +52,7 @@
     private string Surname;
     private string Email;
     private string Phone;
+    private byte[] Img;
     [Parameter]
     public bool RegistrationIsActive { get; set; }
     private void FieldsClear()
@@ -65,7 +67,7 @@
     }
     private void UserRegistration()
     {
-        User.AddUserToDB(Login,Password,Name,Surname,Email,Phone);
+        User.AddUserToDB(Login,Password,Name,Surname,Email,Phone,Img);
         FieldsClear();
     }
 }
