@@ -17,6 +17,7 @@
                         <th>Address</th>
                         <th>Cabinet Number</th>
                         <th>Is Done</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 @foreach (var item in _appointmentList)
@@ -30,13 +31,14 @@
                             <td>@item.DoctorsSpecialization</td>
                             <td>@item.MedCenterAddress</td>
                             <td>@item.CabinetNumber</td>
-                            <td><input type="checkbox" @bind-value="item.IsDone" /></td>
-                            @*<td><button class="btn btn-danger" @onclick="(() => DeleteTask(item))">Delete appointment</button></td>*@
+                            <td><input type="checkbox" @bind="item.IsDone" /></td>
+                            <td><button class="btn btn-danger" @onclick="(() => DeleteTask(item))">Delete Appointment</button></td>
                         </tr>
                     </tbody>
                 }
             </table>
-
+            <br />
+            <h4>Добавить новую запись</h4>
             <div class="row">
                 <div class="col">
                     <input class="form-control" placeholder="Input new appointment here" @bind-value="_nameOfAppointment" />
@@ -49,8 +51,8 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <input type="datetime" @bind-value="_dateOfAppointment"/>
-                </div>
+                    <input type="datetime-local" @bind-value=_dateOfAppointment min="@_dateOfAppointment"/>
+                 </div>
             </div>
             <div class="row">
                 <div class="col">
@@ -67,31 +69,39 @@
                     <input class="form-control" placeholder="_medCenterAddress" @bind-value="_medCenterAddress" />
                 </div>
             </div>
-             <div class="row">
+            <div class="row">
                 <div class="col">
                     <input class="form-control" placeholder="_cabinetNumber" @bind-value="_cabinetNumber" />
                 </div>
             </div>
-                
-            <div class="col col-auto">
-                    <button class="btn btn-outline-dark" @onclick="AddNewTaskToList">Add New Apointment</button>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-dark" @onclick="AddNewTaskToList">Add New Apointment</button>
+                </div>
+            </div>
+            <br />    
+            <div class="row row-auto">
+                <div class="col col-auto">
+                    <input class="form-control" placeholder="choose the month" @bind="_month" />
                 </div>
                 <div class="col col-auto">
-                    <button class="btn btn-primary" @onclick="AddToDB">Save Task List</button>
+                    <button class="btn btn-info" @onclick="()=>_appointmentList = AppointmentList.GetItem(_month)">Refresh List</button>
                 </div>
-            
+                 <div class="col col-auto">
+                    <button class="btn btn-primary" @onclick="AddToDB">Save Task List To DB</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @code {
-    private List<Appointment> _appointmentList = new();
+    private List<Appointment> _appointmentList = AppointmentList.GetItem(_month);//new();
 
-    //private string _newAppointment;
-    private DateTime _timeNow = DateTime.UtcNow;
+    private static string _month;
     private string _nameOfAppointment;
     private string _appointmentsNotes;
-    private DateTime _dateOfAppointment;
+    private DateTime _dateOfAppointment = DateTime.Now;
     private string _doctorsName;
     private string _doctorsSpecialization;
     private string _medCenterAddress;
@@ -100,23 +110,27 @@
 
     private void AddNewTaskToList()
     {
-        //if (!string.IsNullOrEmpty(_newAppointment))
-        //{
+        if (!string.IsNullOrEmpty(_nameOfAppointment)&!string.IsNullOrEmpty(_appointmentsNotes)&!string.IsNullOrEmpty(_doctorsName)
+        &!string.IsNullOrEmpty(_doctorsSpecialization)&!string.IsNullOrEmpty(_medCenterAddress))
+        {
             _appointmentList.Add(new Appointment(_nameOfAppointment,_appointmentsNotes,_dateOfAppointment,
             _doctorsName,_doctorsSpecialization,_medCenterAddress,_cabinetNumber));
-            
-            //f_newAppointment = ""; // string.Empty;
-        //}
+
+            _nameOfAppointment = string.Empty;
+            _appointmentsNotes = string.Empty;
+            _doctorsName = string.Empty;
+            _doctorsSpecialization = string.Empty;
+            _medCenterAddress = string.Empty;
+        }
     }
 
-    //private void DeleteTask(TaskItem item)
-    //{
-    //    _appointmentList.Remove(item);
-    //}
+    private void DeleteTask(Appointment item)
+    {
+        _appointmentList.Remove(item);
+    }
 
     private void AddToDB()
     {
-        AppointmentList.AddItem(new Appointment(_nameOfAppointment,_appointmentsNotes,_dateOfAppointment,
-            _doctorsName,_doctorsSpecialization,_medCenterAddress,_cabinetNumber), "January");
+        if (!string.IsNullOrEmpty(_month)) AppointmentList.AddItem(new AppointmentList(_appointmentList), _month);
     }
 }

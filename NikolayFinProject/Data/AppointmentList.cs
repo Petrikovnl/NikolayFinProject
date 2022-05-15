@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -11,33 +12,43 @@ namespace NikolayFinProject.Data
         {
             this.appointmentList = appointmentList;
         }
-
+        
+        [BsonIgnoreIfDefault]
         public ObjectId _id { get; set; }
         public List<Appointment> appointmentList { get; set; }
-        public static void AddAppointmentList(Appointment item, string month)
-        {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("NikolayFinProject");
-            var collection = database.GetCollection<Appointment>(month);
-            collection.InsertOne(item);
-        }
-        public static void AddAppointmentToDB(string nameOfAppointment, string appointmentsNotes, DateTime dateOfAppointment,
-             string doctorsName, string doctorsSpecialization, string medCenterAddress,
-            int cabinetNumber) //Добавление приема врача в БД
-        {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("NikolayFinProject");
-            var collection = database.GetCollection<Appointment>("Appointments");
-            collection.InsertOne(new Appointment(nameOfAppointment, appointmentsNotes, dateOfAppointment, 
-                doctorsName, doctorsSpecialization, medCenterAddress, cabinetNumber));
-        }
-        public static void AddItem(Appointment item, string day)
-        {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("NikolayFinProject");
-            var collection = database.GetCollection<Appointment>(day);
-            collection.InsertOne(item);
-        }
 
+        public static void AddItem(AppointmentList item, string month)
+        {
+            var client = new MongoClient("mongodb://localhost");
+            var database = client.GetDatabase("NikolayFinProject");
+            var collection = database.GetCollection<AppointmentList>(month);
+            if (database.ListCollectionNames().ToList().Exists(x => x == month))
+            {
+                collection.ReplaceOne(x => true, item);
+            }
+            else
+            {
+                collection.InsertOne(item);
+            }
+        }
+        public static List<Appointment> GetItem(string month)
+        {
+            var client = new MongoClient("mongodb://localhost");
+            var database = client.GetDatabase("NikolayFinProject");
+            if (month != null)
+            {
+                var collection = database.GetCollection<AppointmentList>(month);
+                List<Appointment> list = new();
+                list.AddRange(collection.Find(x => true).FirstOrDefault().appointmentList);
+                return list;
+            }
+            else
+            {
+                var collection = database.GetCollection<AppointmentList>("January");
+                List<Appointment> list = new();
+                list.AddRange(collection.Find(x => true).FirstOrDefault().appointmentList);
+                return list;
+            }
+        }
     }
 }

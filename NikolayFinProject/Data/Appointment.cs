@@ -17,7 +17,6 @@ namespace NikolayFinProject.Data
             MedCenterAddress = medCenterAddress;
             CabinetNumber = cabinetNumber;
         }
-        public ObjectId _id { get; set; }
         public string NameOfAppointment { get; set; }
         public string AppointmentsNotes { get; set; }
         public DateTime DateOfAppointment { get; set; }
