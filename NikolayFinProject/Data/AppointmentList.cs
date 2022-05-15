@@ -23,32 +23,26 @@ namespace NikolayFinProject.Data
             var database = client.GetDatabase("NikolayFinProject");
             var collection = database.GetCollection<AppointmentList>(month);
             if (database.ListCollectionNames().ToList().Exists(x => x == month))
-            {
                 collection.ReplaceOne(x => true, item);
-            }
             else
-            {
                 collection.InsertOne(item);
-            }
         }
         public static List<Appointment> GetItem(string month)
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("NikolayFinProject");
+            List<Appointment> list = new();
             if (month != null)
             {
                 var collection = database.GetCollection<AppointmentList>(month);
-                List<Appointment> list = new();
                 list.AddRange(collection.Find(x => true).FirstOrDefault().appointmentList);
-                return list;
             }
             else
             {
                 var collection = database.GetCollection<AppointmentList>("January");
-                List<Appointment> list = new();
                 list.AddRange(collection.Find(x => true).FirstOrDefault().appointmentList);
-                return list;
             }
+            return list;
         }
     }
 }

@@ -7,7 +7,30 @@
     <button class="btn btn-primary" @onclick="Change">REGISTRATION</button>
 </div>
 
+<div class="row">
+<EditForm Model="client" OnInvalidSubmit="OnInvalid" OnValidSubmit="OnValid">
+    <DataAnnotationsValidator/>
+        <div class="row">
+            <InputText class="form-control" pattern="[0-9]{3}" placeholder="###" @bind-Value="client.Name"></InputText>
+            <ValidationMessage For="()=>client.Name"></ValidationMessage>
+            
+        </div>
+        <button class="btn btn-primary">Save</button>
+</EditForm>
+</div>
+
 @code {
+    Client client=new();
+    public void OnInvalid()
+    {
+        Console.WriteLine("Invalid submit");
+    }
+    public void OnValid()
+    {
+        Console.WriteLine("Valid submit");
+    }
+
+
     private bool _isRegistration=false;
     
     private bool _trigger = false;
