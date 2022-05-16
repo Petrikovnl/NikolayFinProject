@@ -8,11 +8,12 @@ namespace NikolayFinProject.Data
 {
     public class AppointmentList
     {
+        
         public AppointmentList(List<Appointment> appointmentList)
         {
             this.appointmentList = appointmentList;
         }
-        
+
         [BsonIgnoreIfDefault]
         public ObjectId _id { get; set; }
         public List<Appointment> appointmentList { get; set; }
@@ -39,7 +40,7 @@ namespace NikolayFinProject.Data
             }
             else
             {
-                var collection = database.GetCollection<AppointmentList>("January");
+                var collection = database.GetCollection<AppointmentList>(ConvertMonthClass.ConvertMonth(DateTime.Now.Month));
                 list.AddRange(collection.Find(x => true).FirstOrDefault().appointmentList);
             }
             return list;

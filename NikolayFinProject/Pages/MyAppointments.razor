@@ -1,7 +1,7 @@
 ﻿@page "/appointments"
 @using NikolayFinProject.Data
 
-<h3>MyAppointments</h3>
+<h3>My Appointments on @_month</h3>
 
 <div class="container-fluid">
     <div class="row">
@@ -99,7 +99,7 @@
 @code {
     private List<Appointment> _appointmentList = AppointmentList.GetItem(_month);//new();
 
-    private static string _month;
+    private static string _month=ConvertMonthClass.ConvertMonth(DateTime.Now.Month);
     private string _nameOfAppointment;
     private string _appointmentsNotes;
     private DateTime _dateOfAppointment = DateTime.Now;
