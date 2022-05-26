@@ -1,7 +1,9 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,13 +33,13 @@ namespace BlazorApp4.Data
 		}
 
 		public ObjectId _id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public byte[] Img { get; set; }
+        [Required][MinLength(3)][MaxLength(10)] public string Login { get; set; }
+        [Required][MinLength(4)][MaxLength(8)] public string Password { get; set; }
+        [BsonIgnoreIfNull] public string Name { get; set; }
+        [BsonIgnoreIfNull] public string Surname { get; set; }
+        [Required] public string Email { get; set; }
+        [BsonIgnoreIfNull] public string Phone { get; set; }
+        [BsonIgnoreIfNull] public byte[] Img { get; set; }
 
 
         //public static List<User> GetList()

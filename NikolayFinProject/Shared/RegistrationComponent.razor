@@ -13,6 +13,15 @@
                 <tr>
                     <td><input class="form-control" placeholder="Login" @bind-value="Login" /></td>
                 </tr>
+                <div class="row">
+                    <EditForm Model="regUser" OnInvalidSubmit="OnInvalid" OnValidSubmit="OnValid">
+                        <DataAnnotationsValidator/>
+                            <div class="row">
+                                <InputText class="form-control" @bind-Value="regUser.Login"></InputText>
+                                <ValidationMessage For="()=>regUser.Login"></ValidationMessage>
+                            </div>
+                        </EditForm>
+                    </div>
                 <tr>
                     <td><input class="form-control" placeholder="Password" type="password" @bind-value="Password" /></td>
                 </tr>
@@ -45,6 +54,15 @@
 
    
 @code {
+    public void OnInvalid()
+    {
+        Console.WriteLine("Invalid submit");
+    }
+    public void OnValid()
+    {
+        Console.WriteLine("Valid submit");
+    }
+    User regUser = new();
     private string Login;
     private string Password;
     private string PasswordAgain;
