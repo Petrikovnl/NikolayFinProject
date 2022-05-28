@@ -1,4 +1,5 @@
 ﻿@using BlazorApp4.Data
+@using System.ComponentModel.DataAnnotations
 
 <div class="modal-body">
     @if(RegistrationIsActive)
@@ -11,20 +12,39 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><input class="form-control" placeholder="Login" @bind-value="Login" /></td>
-                </tr>
-                <div class="row">
-                    <EditForm Model="regUser" OnInvalidSubmit="OnInvalid" OnValidSubmit="OnValid">
-                        <DataAnnotationsValidator/>
-                            <div class="row">
-                                <InputText class="form-control" @bind-Value="regUser.Login"></InputText>
-                                <ValidationMessage For="()=>regUser.Login"></ValidationMessage>
-                            </div>
+                    <td>
+                        <EditForm Model=@regUser OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
+                            <DataAnnotationsValidator/>
+                                <div class="form-group">
+                                    <label for="Login">Login</label>
+                                    <InputText @bind-Value=regUser.Login class="form-control" id="Name" placeholder="login..."/>
+                                    <ValidationMessage For="()=>regUser.Login"></ValidationMessage>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Password">Password</label>
+                                    <InputText @bind-Value=regUser.Password class="form-control" id="Password" placeholder="password..." type="password"/>
+                                    <ValidationMessage For="()=>regUser.Password"></ValidationMessage>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <InputText @bind-Value=regUser.Email class="form-control" id="Email" placeholder="email..."/>
+                                    <ValidationMessage For="()=>regUser.Email"></ValidationMessage>
+                                </div>
+                                <input @onclick=UserRegistration type="submit" class="btn btn-primary" value="Sign Up"/>
+                           </EditForm>
+                    </td>
+                </tr> 
+                @*<tr>
+                    <td>
+                        <EditForm Model="regUser" OnInvalidSubmit="OnInvalid" OnValidSubmit="OnValid">
+                            <DataAnnotationsValidator/>
+                                <div class="row">
+                                    <InputText class="form-control" placeholder="password" type="password" @bind-Value="regUser.Password"></InputText>
+                                    <ValidationMessage For="()=>regUser.Password"></ValidationMessage>
+                                </div>
                         </EditForm>
-                    </div>
-                <tr>
-                    <td><input class="form-control" placeholder="Password" type="password" @bind-value="Password" /></td>
-                </tr>
+                    </td>
+                </tr>   
                 <tr>
                     <td><input class="form-control" placeholder="Password Again" type="password" @bind-value="PasswordAgain"/></td>
                 </tr>
@@ -36,32 +56,67 @@
                 </tr>
                 <tr>
                     <td><input class="form-control" placeholder="Email" @bind-value="Email"/></td>
-                </tr>
-                <tr>
+                </tr>*@
+                @*<tr>
                     <td><input class="form-control" placeholder="Phone" @bind-value="Phone"/></td>
-                </tr>
-                
+                </tr>*@
+                @*<div class="row">*@
+                @*<tr><td>
+                    <EditForm Model=@regUser OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
+                        <DataAnnotationsValidator/>
+                            <div class="row">
+                                <InputText class="form-control" placeholder="phone like 7##########" @bind-Value="regUser.Phone" />
+                                <ValidationMessage For="()=>regUser.Phone"></ValidationMessage>
+                            </div>
+                    </EditForm>
+                </td></tr>*@
+                @*</div>*@
             </tbody>
         </table>
      <br />
+    @* @if (LastSubmitResult != null)
+     {
+       <h2>
+         Last submit status: @LastSubmitResult
+       </h2>
+     }*@
      <FileUpload></FileUpload>
 
-    <button class="btn btn-primary" @onclick="UserRegistration">SIGN UP</button>
+    @if(_isRegInfoCorrect==true)
+        {
+            <button class="btn btn-primary" @onclick="UserRegistration">SIGN UP</button>
+        }
+        else
+        {
+            <button class="btn btn-primary" disabled @onclick="UserRegistration">SIGN UP</button>
+        }
+
     <button class="btn btn-primary" @onclick="FieldsClear">CLEAR</button>
 }
 </div>
 
-
-   
 @code {
-    public void OnInvalid()
+    //  string LastSubmitResult;
+    //void ValidFormSubmitted(EditContext editContext)
+    //{
+    //  LastSubmitResult = "OnValidSubmit was executed";
+    //}
+    //void InvalidFormSubmitted(EditContext editContext)
+    //{
+    //  LastSubmitResult = "OnInvalidSubmit was executed";
+    //}
+
+    public bool _isRegInfoCorrect { get; set; }
+
+    public void ValidFormSubmitted(EditContext editContext)
     {
-        Console.WriteLine("Invalid submit");
+        _isRegInfoCorrect = true;
     }
-    public void OnValid()
+    public void InvalidFormSubmitted(EditContext editContext)
     {
-        Console.WriteLine("Valid submit");
+        _isRegInfoCorrect=false;
     }
+
     User regUser = new();
     private string Login;
     private string Password;
@@ -85,7 +140,14 @@
     }
     private void UserRegistration()
     {
-        User.AddUserToDB(Login,Password,Name,Surname,Email,Phone,Img);
-        FieldsClear();
+        if(_isRegInfoCorrect)
+        {
+            User.AddUserToDB(regUser.Login,regUser.Password,regUser.Name,regUser.Surname,regUser.Email,regUser.Phone,regUser.Img);
+            FieldsClear();   
+        }
+        else
+        {
+            return;
+        }
     }
 }

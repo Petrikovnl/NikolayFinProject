@@ -17,7 +17,7 @@ namespace BlazorApp4.Data
         //    PhoneNumber = phoneNumber;
         //}
 
-        public User(string login, string password, string name, string surname,  string email,string phone, byte[] img)
+        public User(string login, string password, string name, string surname,  string email, string phone, byte[] img)
         {
             Login = login;
             Password = password;
@@ -37,10 +37,10 @@ namespace BlazorApp4.Data
         [Required][MinLength(4)][MaxLength(8)] public string Password { get; set; }
         [BsonIgnoreIfNull] public string Name { get; set; }
         [BsonIgnoreIfNull] public string Surname { get; set; }
-        [Required] public string Email { get; set; }
-        [BsonIgnoreIfNull] public string Phone { get; set; }
+        [Required][RegularExpression(@"([A-zА-я])+([0-9\-_\+\.])*([A-zА-я0-9\-_\+\.])*@([A-zА-я])+([0-9\-_\+\.])*([A-zА-я0-9\-_\+\.])*[\.]([A-zА-я])+"
+            , ErrorMessage = "Wrong email")] public string Email { get; set; }
+        [BsonIgnoreIfNull][RegularExpression(@"^((7)+([0-9]){10})$", ErrorMessage = "Start with 7 plus 10 characters")] public string Phone { get; set; }
         [BsonIgnoreIfNull] public byte[] Img { get; set; }
-
 
         //public static List<User> GetList()
         //{
