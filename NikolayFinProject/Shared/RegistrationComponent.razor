@@ -1,153 +1,35 @@
-﻿@using BlazorApp4.Data
-@using System.ComponentModel.DataAnnotations
+﻿<div class="row">
+	<div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+		<div class="mb-3 text-center">
+			<h3>SIGNUP</h3>
+		</div>
+		<div class="mb-3">
+			<EditForm Model=@userAccount OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
+				<DataAnnotationsValidator />
+				<div class="form-group">
+					<label for="UserName">UserName</label>
+					<InputText @bind-Value=userAccount.UserName class="form-control" id="Name" placeholder="User Name" />
+					<ValidationMessage For="()=>userAccount.UserName"></ValidationMessage>
+				</div>
 
-<div class="modal-body">
-    @if(RegistrationIsActive)
-    {
-        <table class="table table-responsive-md">
-            <thead class="table-dark">
-                <tr>
-                    <th><h2>Registration</h2></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <EditForm Model=@regUser OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
-                            <DataAnnotationsValidator/>
-                                <div class="form-group">
-                                    <label for="Login">Login</label>
-                                    <InputText @bind-Value=regUser.Login class="form-control" id="Name" placeholder="login..."/>
-                                    <ValidationMessage For="()=>regUser.Login"></ValidationMessage>
-                                </div>
-                                <div class="form-group">
-                                    <label for="Password">Password</label>
-                                    <InputText @bind-Value=regUser.Password class="form-control" id="Password" placeholder="password..." type="password"/>
-                                    <ValidationMessage For="()=>regUser.Password"></ValidationMessage>
-                                </div>
-                                <div class="form-group">
-                                    <label for="Email">Email</label>
-                                    <InputText @bind-Value=regUser.Email class="form-control" id="Email" placeholder="email..."/>
-                                    <ValidationMessage For="()=>regUser.Email"></ValidationMessage>
-                                </div>
-                                <input @onclick=UserRegistration type="submit" class="btn btn-primary" value="Sign Up"/>
-                           </EditForm>
-                    </td>
-                </tr> 
-                @*<tr>
-                    <td>
-                        <EditForm Model="regUser" OnInvalidSubmit="OnInvalid" OnValidSubmit="OnValid">
-                            <DataAnnotationsValidator/>
-                                <div class="row">
-                                    <InputText class="form-control" placeholder="password" type="password" @bind-Value="regUser.Password"></InputText>
-                                    <ValidationMessage For="()=>regUser.Password"></ValidationMessage>
-                                </div>
-                        </EditForm>
-                    </td>
-                </tr>   
-                <tr>
-                    <td><input class="form-control" placeholder="Password Again" type="password" @bind-value="PasswordAgain"/></td>
-                </tr>
-                <tr>
-                    <td><input class="form-control" placeholder="Name" @bind-value="Name" /></td>
-                </tr>
-                <tr>
-                    <td><input class="form-control" placeholder="Surname" @bind-value="Surname" /></td>
-                </tr>
-                <tr>
-                    <td><input class="form-control" placeholder="Email" @bind-value="Email"/></td>
-                </tr>*@
-                @*<tr>
-                    <td><input class="form-control" placeholder="Phone" @bind-value="Phone"/></td>
-                </tr>*@
-                @*<div class="row">*@
-                @*<tr><td>
-                    <EditForm Model=@regUser OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
-                        <DataAnnotationsValidator/>
-                            <div class="row">
-                                <InputText class="form-control" placeholder="phone like 7##########" @bind-Value="regUser.Phone" />
-                                <ValidationMessage For="()=>regUser.Phone"></ValidationMessage>
-                            </div>
-                    </EditForm>
-                </td></tr>*@
-                @*</div>*@
-            </tbody>
-        </table>
-     <br />
-    @* @if (LastSubmitResult != null)
-     {
-       <h2>
-         Last submit status: @LastSubmitResult
-       </h2>
-     }*@
-     <FileUpload></FileUpload>
-
-    @if(_isRegInfoCorrect==true)
-        {
-            <button class="btn btn-primary" @onclick="UserRegistration">SIGN UP</button>
-        }
-        else
-        {
-            <button class="btn btn-primary" disabled @onclick="UserRegistration">SIGN UP</button>
-        }
-
-    <button class="btn btn-primary" @onclick="FieldsClear">CLEAR</button>
-}
+				<div class="form-group">
+					<label for="Password">Password</label>
+					<InputText @bind-Value=userAccount.Password class="form-control" id="Password" type="password" placeholder="Password" />
+					<ValidationMessage For="()=>userAccount.Password"></ValidationMessage>
+				</div>
+				<div class="form-group">
+					<label for="ConfirmPassword">ConfirmPassword</label>
+					<InputText @bind-Value=userAccount.ConfirmPassword class="form-control" id="ConfirmPassword" type="password" placeholder="Confirm Password" />
+					<ValidationMessage For="()=>userAccount.ConfirmPassword"></ValidationMessage>
+				</div>
+				@*<div class="form-group">
+					<label for="Email">Email</label>
+					<InputText @bind-Value=regUser.Email class="form-control" id="Email" placeholder="Email" />
+					<ValidationMessage For="()=>regUser.Email"></ValidationMessage>
+				</div>*@
+				<input @onclick=UserRegistration class="btn btn-primary" type="submit" value="Sign Up" />
+				<button @onclick="FieldsClear" class="btn btn-primary">CLEAR</button>
+			</EditForm>
+		</div>
+	</div>
 </div>
-
-@code {
-    //  string LastSubmitResult;
-    //void ValidFormSubmitted(EditContext editContext)
-    //{
-    //  LastSubmitResult = "OnValidSubmit was executed";
-    //}
-    //void InvalidFormSubmitted(EditContext editContext)
-    //{
-    //  LastSubmitResult = "OnInvalidSubmit was executed";
-    //}
-
-    public bool _isRegInfoCorrect { get; set; }
-
-    public void ValidFormSubmitted(EditContext editContext)
-    {
-        _isRegInfoCorrect = true;
-    }
-    public void InvalidFormSubmitted(EditContext editContext)
-    {
-        _isRegInfoCorrect=false;
-    }
-
-    User regUser = new();
-    private string Login;
-    private string Password;
-    private string PasswordAgain;
-    private string Name;
-    private string Surname;
-    private string Email;
-    private string Phone;
-    private byte[] Img;
-    [Parameter]
-    public bool RegistrationIsActive { get; set; }
-    private void FieldsClear()
-    {
-        Login = string.Empty;
-        Password = string.Empty;
-        PasswordAgain = string.Empty;
-        Name = string.Empty;
-        Surname = string.Empty;
-        Email = string.Empty;
-        Phone = string.Empty;
-    }
-    private void UserRegistration()
-    {
-        if(_isRegInfoCorrect)
-        {
-            User.AddUserToDB(regUser.Login,regUser.Password,regUser.Name,regUser.Surname,regUser.Email,regUser.Phone,regUser.Img);
-            FieldsClear();   
-        }
-        else
-        {
-            return;
-        }
-    }
-}

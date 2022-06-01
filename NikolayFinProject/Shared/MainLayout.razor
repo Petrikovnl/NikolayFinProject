@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlazorApp4.Data
+@using NikolayFinProject.Authentication
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
 
 <div class="page">
     <div class="sidebar">
@@ -8,8 +12,18 @@
     <div class="main">          
       
         <div class="top-row px-4">
-            <a class="btn btn-secondary" href="signup">Sign Up</a>
-            <a class="btn btn-primary" href="login">Log In</a>            
+            <AuthorizeView>
+                <Authorized>
+                    <a @onclick="Logout" href="javascript:void(0)">Logout</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/login">Login</a>
+                    <a href="/signup">Signup</a>
+                </NotAuthorized>
+            </AuthorizeView>
+            @*<a class="btn btn-info" href="accountprofile">@singleton.Login</a>*@
+            @*<a class="btn btn-secondary" href="signup">Sign Up</a>
+            <a class="btn btn-primary" href="login">Log In</a> *@           
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
@@ -19,3 +33,12 @@
         </div>
     </div>
 </div>
+
+@code {
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/", true);
+    }
+}

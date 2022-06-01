@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NikolayFinProject.Authentication;
 using NikolayFinProject.Data;
 using System;
 using System.Collections.Generic;
@@ -28,6 +31,12 @@ namespace NikolayFinProject
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddTransient<TransientService>(); //при запросе к сервису создается новый экз. сервиса и каждый новый запрос - новый экз. сервиса
+            services.AddSingleton<SingletonService>(); //при запросе к сервису создается новый экз. сервиса и каждый новый запрос идет к одному и тому же экз. сервиса
+            services.AddScoped<ProtectedSessionStorage>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddSingleton<UserAccountService>();
+            services.AddAuthenticationCore();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

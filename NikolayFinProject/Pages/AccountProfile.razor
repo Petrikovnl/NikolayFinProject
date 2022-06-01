@@ -1,5 +1,7 @@
 ﻿@page "/accountprofile"
+@attribute [Authorize(Roles = "Administrator,User")]
 @using BlazorApp4.Data
+@inject SingletonService singleton
 
 <div>
     <input class="form-control" placeholder="enter your login to search the database" @bind="_login" />
@@ -85,11 +87,9 @@
     </div>
 </div>
 
-
-
-
 @code {
     public string _login { get; set; }
+
     private void CheckLogin (string checkedLogin)
     {
         

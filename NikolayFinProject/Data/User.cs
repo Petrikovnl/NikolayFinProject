@@ -11,12 +11,6 @@ namespace BlazorApp4.Data
 {
     public class User
     {
-        //public Users(string login, string phoneNumber)
-        //{
-        //    Login = login;
-        //    PhoneNumber = phoneNumber;
-        //}
-
         public User(string login, string password, string name, string surname,  string email, string phone, byte[] img)
         {
             Login = login;
@@ -33,26 +27,21 @@ namespace BlazorApp4.Data
 		}
 
 		public ObjectId _id { get; set; }
-        [Required][MinLength(3)][MaxLength(10)] public string Login { get; set; }
-        [Required][MinLength(4)][MaxLength(8)] public string Password { get; set; }
+
+        [Required][RegularExpression(@"^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$"
+        ,ErrorMessage = "Limit of 2-20 characters, which can be letters and numbers" +
+            ", the first character must be a letter")] public string Login { get; set; }
+
+        [Required][RegularExpression(@"(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+        , ErrorMessage = "Uppercase and lowercase Latin letters" +
+            ", numbers, special characters.Minimum 8 characters")] public string Password { get; set; }
+        
+        [BsonIgnore][Compare("Password")] public string ConfirmPassword { get; set; }
         [BsonIgnoreIfNull] public string Name { get; set; }
         [BsonIgnoreIfNull] public string Surname { get; set; }
-        [Required][RegularExpression(@"([A-zА-я])+([0-9\-_\+\.])*([A-zА-я0-9\-_\+\.])*@([A-zА-я])+([0-9\-_\+\.])*([A-zА-я0-9\-_\+\.])*[\.]([A-zА-я])+"
-            , ErrorMessage = "Wrong email")] public string Email { get; set; }
-        [BsonIgnoreIfNull][RegularExpression(@"^((7)+([0-9]){10})$", ErrorMessage = "Start with 7 plus 10 characters")] public string Phone { get; set; }
+        [Required][EmailAddress] public string Email { get; set; }
+        [BsonIgnoreIfNull][Phone] public string Phone { get; set; }
         [BsonIgnoreIfNull] public byte[] Img { get; set; }
-
-        //public static List<User> GetList()
-        //{
-        //    List<User> listToReturn = new List<User>();
-        //    listToReturn.Add(new User("Bob", "Bob", "Smith", "987654321"));
-        //    listToReturn.Add(new User("Bob", "John", "Marlou", "789465413"));
-        //    listToReturn.Add(new User("Bob", "Ivan", "Ivanov", "987654321"));
-        //    listToReturn.Add(new User("Bob", "Petr", "Petrov", "987654321"));
-        //    listToReturn.Add(new User("Bob", "Andrey", "Andreev", "987654321"));
-        //    listToReturn.Add(new User("Bob", "Georgiy", "Fedorov", "987654321"));
-        //    return listToReturn;
-        //}
 
         public static void AddUserToDB(string login, string password, string name, string surname, string email,
             string phone, byte[] img) //Добавление юзера в БД

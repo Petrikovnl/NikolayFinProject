@@ -1,27 +1,25 @@
 ﻿@page "/counter"
+@*@attribute [Authorize(Roles = "Administrator,User")]*@
+
 @using System;
 @using System.Timers;
-@implements IDisposable;
+@*@implements IDisposable;*@
 
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
 
-@*<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>*@
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
-<div class="row row-sm-12 row-md-6 border border-primary rounded p-2">
+@*<div class="row row-sm-12 row-md-6 border border-primary rounded p-2">
     <div class="col-sm-12 col-md-6">
-        @*<h3>Hello!</h3>*@
         <input class="form-control mb-2" @bind-value="Name"/>
         <input class="form-control mb-2" @bind-value="Age"/>
-        
         <select @bind="SelectedValue">
             <option value="-1">@Value</option>
         </select>
-        @*@foreach(var item in )
-        {}*@
     </div>
-</div>
+</div>*@
 
 @code {
     public string Name { get; set; }
@@ -32,26 +30,26 @@
     private int currentCount = 0;
     private static Timer aTimer;
 
-    protected override void OnInitialized()
-    {
-        aTimer = new Timer(1000);           // Create a timer with a two second interval.
-        aTimer.Elapsed += IncrementCount;   // Hook up the Elapsed event for the timer. 
-                                            // aTimer.AutoReset = false;
-                                            // aTimer.Enabled = true;
-        aTimer.Start();
-    }
-    private void IncrementCount(object sender, ElapsedEventArgs e)
+    //protected override void OnInitialized()
+    //{
+    //    aTimer = new Timer(1000);           // Create a timer with a two second interval.
+    //    aTimer.Elapsed += IncrementCount;   // Hook up the Elapsed event for the timer. 
+    //                                        // aTimer.AutoReset = false;
+    //                                        // aTimer.Enabled = true;
+    //    aTimer.Start();
+    //}
+    private void IncrementCount(/*object sender, ElapsedEventArgs e*/)
     {
         currentCount++;
         InvokeAsync(StateHasChanged);
         //aTimer.Stop();
         //aTimer.Dispose();
     }
-    public void Dispose()
-    {
-        if (aTimer.Enabled)
-        {
-            aTimer.Dispose();
-        }
-    }
+    //public void Dispose()
+    //{
+    //    if (aTimer.Enabled)
+    //    {
+    //        aTimer.Dispose();
+    //    }
+    //}
 }
