@@ -2,7 +2,7 @@
 @inject IJSRuntime qqq
 @using NikolayFinProject.Authentication
 
-<h3>Avatar:</h3>
+@*<h3>Avatar:</h3>*@
 
 @*<p>
     <label>
@@ -18,13 +18,13 @@
     </label>
 </p>*@
 
-<p>
+@*<p>*@
     <label>
         <InputFile OnChange="@LoadFiles" single/>
     </label>
-</p>
+@*</p>*@
 
-@if (isLoading)
+@*@if (isLoading)
 {
     <p>Uploading...</p>
 }
@@ -43,7 +43,7 @@ else
             </li>
         }
     </ul>
-}
+}*@
 
 @code {
     [CascadingParameter]

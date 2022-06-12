@@ -16,11 +16,11 @@
 					@if(GetAuthorizedUser().GetAwaiter().GetResult().Img!=null)
 					{
 						<img src="@string.Format("data:image/jpg;base64,{0}"
-						,Convert.ToBase64String(GetAuthorizedUser().GetAwaiter().GetResult().Img))" width="50%" >
+						,Convert.ToBase64String(GetAuthorizedUser().GetAwaiter().GetResult().Img))" width="30" height="30">
 					}
 					else
 					{
-						<img src="avatar_default.png" width="10%" height="10%">
+						<img src="avatar_default.png" width="30" height="30">
 					}
 					<a class="alert-info" style="border-color:aqua" href="/accountprofile">@context.User.Identity.Name</a>
 					<a @onclick="Logout" href="javascript:void(0)">Logout</a>
