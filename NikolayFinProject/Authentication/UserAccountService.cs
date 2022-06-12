@@ -16,9 +16,9 @@ namespace NikolayFinProject.Authentication
             //};
         }
 
-        public UserAccount? GetByUserName(string userName)
+        public UserAccount? GetByUserName(string userLogin)
         {
-            return _users.FirstOrDefault(x => x.UserName == userName);
+            return _users.FirstOrDefault(x => x.UserLogin == userLogin);
         }
     }
 }

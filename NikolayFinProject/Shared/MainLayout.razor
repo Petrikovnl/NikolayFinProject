@@ -5,40 +5,59 @@
 @inject NavigationManager navManager
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+	<div class="sidebar">
+		<NavMenu />
+	</div>
 
-    <div class="main">          
-      
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <a @onclick="Logout" href="javascript:void(0)">Logout</a>
-                </Authorized>
-                <NotAuthorized>
-                    <a href="/login">Login</a>
-                    <a href="/signup">Signup</a>
-                </NotAuthorized>
-            </AuthorizeView>
-            @*<a class="btn btn-info" href="accountprofile">@singleton.Login</a>*@
-            @*<a class="btn btn-secondary" href="signup">Sign Up</a>
-            <a class="btn btn-primary" href="login">Log In</a> *@           
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+	<div class="main">
+		<div class="top-row px-4">
+			<AuthorizeView>
+				<Authorized>
+					@if(GetAuthorizedUser().GetAwaiter().GetResult().Img!=null)
+					{
+						<img src="@string.Format("data:image/jpg;base64,{0}"
+						,Convert.ToBase64String(GetAuthorizedUser().GetAwaiter().GetResult().Img))" width="50%" >
+					}
+					else
+					{
+						<img src="avatar_default.png" width="10%" height="10%">
+					}
+					<a class="alert-info" style="border-color:aqua" href="/accountprofile">@context.User.Identity.Name</a>
+					<a @onclick="Logout" href="javascript:void(0)">Logout</a>
+				</Authorized>
+				<NotAuthorized>
+					<a href="/login">Login</a>
+					<a href="/signup">Signup</a>
+				</NotAuthorized>
+			</AuthorizeView>
+			@*<a class="btn btn-info" href="accountprofile">@singleton.Login</a>*@
+			@*<a class="btn btn-secondary" href="signup">Sign Up</a>
+			<a class="btn btn-primary" href="login">Log In</a> *@
+			<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+		</div>
 
-        <div class="content px-4">
-            
-            @Body
-        </div>
-    </div>
+		<div class="content px-4">
+			@Body
+		</div>
+	</div>
 </div>
 
 @code {
-    private async Task Logout()
-    {
-        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
-        await customAuthStateProvider.UpdateAuthenticationState(null);
-        navManager.NavigateTo("/", true);
-    }
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationState { get; set; }
+
+	private async Task<UserAccount> GetAuthorizedUser()
+	{
+		var authState = await authenticationState;
+		string userName = authState.User.Identity.Name;
+		UserAccount authorizedUser = UserAccount.GetAccountProfile(userName);
+		return authorizedUser;
+	}
+	
+	private async Task Logout()
+	{
+		var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+		await customAuthStateProvider.UpdateAuthenticationState(null);
+		navManager.NavigateTo("/", true);
+	}
 }

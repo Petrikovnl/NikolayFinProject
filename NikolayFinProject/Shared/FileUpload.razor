@@ -1,26 +1,26 @@
 ﻿@inject IWebHostEnvironment Environment
 @inject IJSRuntime qqq
+@using NikolayFinProject.Authentication
 
-<h3>Upload Files</h3>
+<h3>Avatar:</h3>
 
-<p>
+@*<p>
     <label>
         Max file size:
         <input type="number" @bind="maxFileSize" />
     </label>
-</p>
+</p>*@
 
-<p>
+@*<p>
     <label>
         Max allowed files:
         <input type="number" @bind="maxAllowedFiles" />
     </label>
-</p>
+</p>*@
 
 <p>
     <label>
-        Upload up to @maxAllowedFiles of up to @maxFileSize bytes:
-        <InputFile OnChange="@LoadFiles" multiple />
+        <InputFile OnChange="@LoadFiles" single/>
     </label>
 </p>
 
@@ -46,32 +46,46 @@ else
 }
 
 @code {
-    
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    private async Task<UserAccount> GetAuthorizedUser()
+    {
+        var authState = await authenticationState;
+        string userName = authState.User.Identity.Name;
+        UserAccount authorizedUser = UserAccount.GetAccountProfile(userName);
+        return authorizedUser;
+    }
+
+    //UserAccount userAccount = new();
+
+    [Parameter]
+    public string userName { get; set; }
     private List<IBrowserFile> loadedFiles = new();
     private long maxFileSize = 500000;
-    private int maxAllowedFiles = 3;
+    private int maxAllowedFiles = 1;
     private bool isLoading;
     protected byte[] img;
+    public UserAccount userAccount=new ();
+    string imgSrc;
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         isLoading = true;
         loadedFiles.Clear();
 
-        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        foreach (var file in e.GetMultipleFiles())
         {
             try
             {
                 loadedFiles.Add(file);
-
-                //var trustedFileNameForFileStorage = Path.GetRandomFileName();
                 var stream = file.OpenReadStream(maxFileSize);
                 img = new byte[stream.Length];
                 await stream.ReadAsync(img);
-
                 isLoading = false;
-                //ImgToDb.AddToDB(new ImgToDb("RandomName", img));
-
+                //userAccount.Img = img;
+                UserAccount.ReplaceUserAccountToDB(GetAuthorizedUser().GetAwaiter().GetResult().UserLogin,img);
+                imgSrc = string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(img));
             }
 
             catch (Exception ex)

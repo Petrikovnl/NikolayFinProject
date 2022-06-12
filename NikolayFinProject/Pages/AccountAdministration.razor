@@ -2,6 +2,7 @@
 @attribute [Authorize(Roles = "Administrator")]
 
 @using BlazorApp4.Data
+@using NikolayFinProject.Authentication
 
 <h3>AccountProfile</h3>
 
@@ -14,10 +15,10 @@
                 <tr>
                     <th>Login</th>
                     <th>Password</th>
-                    <th>Name</th>
-                    <th>Surname</th>
+                    <th>Role</th>
+                   @* <th>Surname</th>
                     <th>Email</th>
-                    <th>Phone</th>
+                    <th>Phone</th>*@
                     <th>Action</th>
                 </tr>
             </thead>
@@ -34,12 +35,12 @@
                     {
                         <tbody>
                             <tr>
-                                <td>@item.Login</td>
+                                <td>@item.UserLogin</td>
                                 <td>@item.Password</td>
-                                <td>@item.Name</td>
-                                <td>@item.Surname</td>
+                                <td>@item.Role</td>
+                                @*<td>@item.Surname</td>
                                 <td>@item.Email</td>
-                                <td>@item.Phone</td>
+                                <td>@item.Phone</td>*@
                                 <td><button class="btn btn-danger" @onclick="(() => DeleteUser(item))">Delete user</button></td>
                             </tr>
                         </tbody>
@@ -78,11 +79,11 @@
 
 @code {
     [Parameter]
-    public List<User> AllUsers { get; set; } = User.GetAllUsersFromDb();
+    public List<UserAccount> AllUsers { get; set; } = UserAccount.GetAllUserAccountFromDB();
     
     private List<User> _allUsers = new List<User>();
     
-    private void DeleteUser (User item)
+    private void DeleteUser (UserAccount item)
     {
         AllUsers.Remove(item);
     }

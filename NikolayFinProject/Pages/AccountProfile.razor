@@ -1,97 +1,118 @@
 ﻿@page "/accountprofile"
 @attribute [Authorize(Roles = "Administrator,User")]
-@using BlazorApp4.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using NikolayFinProject.Data
 @inject SingletonService singleton
+@using NikolayFinProject.Authentication
+@inject UserAccountService userAccountService
+@inject IJSRuntime js
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@inject IJSRuntime qqq
 
-<div>
+@*<div>
     <input class="form-control" placeholder="enter your login to search the database" @bind="_login" />
-</div>
-<h3>AccountProfile</h3>
+</div>*@
+<h3>My Profile</h3>
 
 <div class="row">
+	<div class="container-fluid">
+		<table class="table table-responsive-md">
+			<tr>
+				<th>Login:</th>
+				<AuthorizeView>
+					<Authorized>
+						<td>@context.User.Identity.Name</td>
+					</Authorized>
+				</AuthorizeView>
+			</tr>
+			<tr>
+				<th>Password:</th>
+				<AuthorizeView>
+					<Authorized>
+						<td>
+							<div class="password">
+								@GetAuthorizedUser().GetAwaiter().GetResult().Password
+							</div>
+						</td>
+					</Authorized>
+				</AuthorizeView>
+			</tr>
+			<tr>
+				<th>Role:</th>
+				<AuthorizeView>
+					<Authorized>
+						<td>@GetAuthorizedUser().GetAwaiter().GetResult().Role</td>
+					</Authorized>
+				</AuthorizeView>
+			</tr>
+			<tr>
+				<th>Avatar:</th>
+				<AuthorizeView>
+					<Authorized>
+						@if (GetAuthorizedUser().GetAwaiter().GetResult().Img != null)
+						{
+							<img src="@string.Format("data:image/jpg;base64,{0}"
+						,Convert.ToBase64String(GetAuthorizedUser().GetAwaiter().GetResult().Img))" width="160" height="90">
+						}
+						else
+						{
+							<img src="avatar_default.png" width="160" height="90">
+						}
+					</Authorized>
+				</AuthorizeView>
+			</tr>
 
-    <div class="container-fluid">
-     
-        <table class="table table-responsive-md">
-            
-                <tr>
-                    <th>Login</th>
-                    
-                    @if (@User.GetAccountProfile(_login)==null)
-                    {
-                        <td>No data</td>
-                    }
-                    else
-                    {
-                        <td>@User.GetAccountProfile(_login).Login</td>
-                    }
-                    
-                </tr>
-                <tr>
-                    <th>Password</th>
-                    @if (@User.GetAccountProfile(_login)==null)
-                    {
-                        <td>No data</td>
-                    }
-                    else
-                    {
-                        <td>@User.GetAccountProfile(_login).Password</td>
-                    }
-                </tr>
-                <tr>
-                    <th>Name</th>
-                    @if (@User.GetAccountProfile(_login)==null)
-                    {
-                        <td>No data</td>
-                    }
-                    else
-                    {
-                        <td>@User.GetAccountProfile(_login).Name</td>
-                    }
-                </tr>
-                <tr>
-                    <th>Surname</th>
-                    @if (@User.GetAccountProfile(_login)==null)
-                    {
-                        <td>No data</td>
-                    }
-                    else
-                    {
-                        <td>@User.GetAccountProfile(_login).Surname</td>
-                    }
-                </tr>
-                <tr>
-                    <th>Email</th>
-                    @if (@User.GetAccountProfile(_login)==null)
-                    {
-                        <td>No data</td>
-                    }
-                    else
-                    {
-                        <td>@User.GetAccountProfile(_login).Email</td>
-                    }
-                </tr>
-                <tr>
-                    <th>Phone</th>
-                    @if (@User.GetAccountProfile(_login)==null)
-                    {
-                        <td>No data</td>
-                    }
-                    else
-                    {
-                        <td>@User.GetAccountProfile(_login).Phone</td>
-                    }
-                </tr>
-            
-        </table>
-    </div>
+		</table>
+	</div>
 </div>
+<FileUpload></FileUpload>
 
 @code {
-    public string _login { get; set; }
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationState { get; set; }
 
-    private void CheckLogin (string checkedLogin)
-    {
-        
-    }
+	private async Task<UserAccount> GetAuthorizedUser()
+	{
+		var authState = await authenticationState;
+		string userName = authState.User.Identity.Name;
+		UserAccount authorizedUser = UserAccount.GetAccountProfile(userName);
+		return authorizedUser;
+	}
+
+	[Parameter]
+	public string userName { get; set; }
+	private List<IBrowserFile> loadedFiles = new();
+	private long maxFileSize = 500000;
+	private int maxAllowedFiles = 1;
+	private bool isLoading;
+	protected byte[] img;
+	public UserAccount userAccount = new();
+	string imgSrc;
+
+	public async Task LoadFiles(InputFileChangeEventArgs e)
+	{
+		isLoading = true;
+		loadedFiles.Clear();
+
+		foreach (var file in e.GetMultipleFiles())
+		{
+			try
+			{
+				loadedFiles.Add(file);
+				var stream = file.OpenReadStream(maxFileSize);
+				img = new byte[stream.Length];
+				await stream.ReadAsync(img);
+				isLoading = false;
+				userAccount.Img = img;
+				imgSrc = string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(img));
+			}
+
+			catch (Exception ex)
+			{
+				await qqq.InvokeVoidAsync("logError", ex);
+			}
+		}
+
+	}
   }

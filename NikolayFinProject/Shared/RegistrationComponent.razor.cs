@@ -12,7 +12,7 @@ namespace NikolayFinProject.Shared
 		{
 			if (_isRegInfoCorrect)
 			{
-				UserAccount.AddUserAccountToDB(userAccount.UserName, userAccount.Password);
+				UserAccount.AddUserAccountToDB(userAccount.UserLogin, userAccount.Password);
 				//User.AddUserToDB(regUser.Login, regUser.Password, regUser.Name, regUser.Surname, regUser.Email, regUser.Phone, regUser.Img);
 				FieldsClear();
 			}
@@ -25,7 +25,7 @@ namespace NikolayFinProject.Shared
 
 		private void FieldsClear()
 		{
-			userAccount.UserName = string.Empty;
+			userAccount.UserLogin = string.Empty;
 			userAccount.Password = string.Empty;
 			//regUser.Login = string.Empty;
 			//regUser.Password = string.Empty;

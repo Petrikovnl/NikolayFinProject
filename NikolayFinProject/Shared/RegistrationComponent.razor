@@ -7,9 +7,9 @@
 			<EditForm Model=@userAccount OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
 				<DataAnnotationsValidator />
 				<div class="form-group">
-					<label for="UserName">UserName</label>
-					<InputText @bind-Value=userAccount.UserName class="form-control" id="Name" placeholder="User Name" />
-					<ValidationMessage For="()=>userAccount.UserName"></ValidationMessage>
+					<label for="UserLogin">UserLogin</label>
+					<InputText @bind-Value=userAccount.UserLogin class="form-control" id="Name" placeholder="User Login" />
+					<ValidationMessage For="()=>userAccount.UserLogin"></ValidationMessage>
 				</div>
 
 				<div class="form-group">

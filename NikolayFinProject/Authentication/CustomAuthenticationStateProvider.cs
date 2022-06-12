@@ -16,6 +16,12 @@ namespace NikolayFinProject.Authentication
             _sessionStorage = sessionStorage;
         }
 
+        //public override async Task<AuthenticationState> SetAsync(string purpose, string key, object value)
+        //{
+
+        //}
+
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
@@ -27,7 +33,7 @@ namespace NikolayFinProject.Authentication
                     return await Task.FromResult(new AuthenticationState(_anonymous));
                 var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, userSession.UserName),
+                        new Claim(ClaimTypes.Name, userSession.UserLogin),
                         new Claim(ClaimTypes.Role, userSession.Role)
                     }, "CustomAuth"));
                 return await Task.FromResult(new AuthenticationState(claimsPrincipal));
@@ -47,7 +53,7 @@ namespace NikolayFinProject.Authentication
                 await _sessionStorage.SetAsync("UserSession", userSession);
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, userSession.UserName),
+                    new Claim(ClaimTypes.Name, userSession.UserLogin),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }));
             }
